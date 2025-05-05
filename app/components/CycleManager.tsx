@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Cycle, Transaction } from '../types';
 
 interface CycleManagerProps {
@@ -82,12 +82,49 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
               <div className="space-y-2 mb-4">
                 <p>Status: <span className="font-medium">{cycle.status}</span></p>
                 <p>Transactions: <span className="font-medium">{summary.count}</span></p>
-                <p>Profit (Total): <span className={`font-medium ${summary.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.totalProfit.toLocaleString()} gp</span></p>
-                <p>Profit (Used Seeds): <span className={`font-medium ${summary.profitUsedSeeds >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.profitUsedSeeds.toLocaleString()} gp</span></p>
-                <p>Yield: <span className="font-medium">{summary.totalYield}</span></p>
-                <p>Seeds Used: <span className="font-medium">{summary.seedsUsed}</span></p>
-                <p>Efficiency: <span className="font-medium">{summary.efficiency.toFixed(2)}</span></p>
+                <p>
+                  Profit (Total):
+                  <span
+                    className="ml-1 cursor-help"
+                    title="Total profit using the full value of all seeds bought for this cycle."
+                  >ℹ️</span>
+                  <span className={`font-medium ml-1 ${summary.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.totalProfit.toLocaleString()} gp</span>
+                </p>
+                <p>
+                  Profit (Used Seeds):
+                  <span
+                    className="ml-1 cursor-help"
+                    title="Profit using only the cost of seeds actually used (not all bought)."
+                  >ℹ️</span>
+                  <span className={`font-medium ml-1 ${summary.profitUsedSeeds >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.profitUsedSeeds.toLocaleString()} gp</span>
+                </p>
+                <p>
+                  Yield:
+                  <span
+                    className="ml-1 cursor-help"
+                    title="Sum of all items sold in this cycle."
+                  >ℹ️</span>
+                  <span className="font-medium ml-1">{summary.totalYield}</span>
+                </p>
+                <p>
+                  Seeds Used:
+                  <span
+                    className="ml-1 cursor-help"
+                    title="Sum of 'Seeds Used' values you set for each buy transaction."
+                  >ℹ️</span>
+                  <span className="font-medium ml-1">{summary.seedsUsed}</span>
+                </p>
+                <p>
+                  Efficiency:
+                  <span
+                    className="ml-1 cursor-help"
+                    title="Yield divided by Seeds Used."
+                  >ℹ️</span>
+                  <span className="font-medium ml-1">{summary.efficiency.toFixed(2)}</span>
+                </p>
               </div>
+              {/* Collapsible Calculation Explanation Section */}
+              <CalculationExplanation />
               {buys.length > 0 && (
                 <div className="mb-2 p-2 bg-gray-50 border border-gray-200 rounded">
                   <h4 className="font-semibold mb-2">Buy Transactions (Seeds Used)</h4>
@@ -168,6 +205,29 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function CalculationExplanation() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mt-4">
+      <button
+        className="text-blue-600 underline text-sm mb-2"
+        onClick={() => setOpen((v) => !v)}
+      >
+        {open ? 'Hide' : 'How are these numbers calculated?'}
+      </button>
+      {open && (
+        <div className="bg-blue-50 border border-blue-200 rounded p-3 text-sm space-y-2">
+          <div><strong>Profit (Total):</strong> Total profit using the full value of all seeds bought for this cycle.<br /><span className="text-gray-600">Formula: (Total Earned from Sells) - (Total Spent on All Seeds Bought)</span></div>
+          <div><strong>Profit (Used Seeds):</strong> Profit using only the cost of seeds actually used (not all bought).<br /><span className="text-gray-600">Formula: (Total Earned from Sells) - (Cost of Seeds Used)</span></div>
+          <div><strong>Yield:</strong> Sum of all items sold in this cycle.<br /><span className="text-gray-600">Formula: Sum of Quantities from Sell Transactions</span></div>
+          <div><strong>Seeds Used:</strong> Sum of 'Seeds Used' values you set for each buy transaction.<br /><span className="text-gray-600">Formula: Sum of Seeds Used (per Buy Transaction)</span></div>
+          <div><strong>Efficiency:</strong> Yield divided by Seeds Used.<br /><span className="text-gray-600">Formula: Yield / Seeds Used</span></div>
+        </div>
+      )}
     </div>
   );
 } 
