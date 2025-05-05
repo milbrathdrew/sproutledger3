@@ -1,0 +1,11 @@
+# .cursorrules for SproutLedger
+
+1. Always refer to the current DEV_PLAN.md for all development decisions and feature work. Update DEV_PLAN.md as necessary when requirements change or new features are proposed.
+2. If any proposed item or code change strays from the current development plan, it must be clearly highlighted in communication and explicitly approved before implementation.
+3. Follow a strict branching system:
+   - All new features must be developed in `feature/<feature-name>` branches.
+   - All bugfixes must be developed in `bugfix/<description>` branches.
+   - Use `main` for stable releases and `develop` for ongoing integration.
+   - All changes must be merged via pull request and reviewed.
+4. Focus exclusively on MVP features and tasks until the boolean `MVP_COMPLETE` in DEV_PLAN.md is set to YES. No post-MVP work may begin until this is changed and approved.
+5. DEV_PLAN.md must include the branch names for all completed and in-progress work, clearly indicating which branch corresponds to each feature or fix. 
