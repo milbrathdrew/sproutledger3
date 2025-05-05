@@ -77,7 +77,7 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
           const summary = calculateCycleSummary(cycle.id);
           const buys = transactions.filter(t => t.cycleId === cycle.id && t.buy);
           return (
-            <div key={cycle.id} className="p-4 border rounded shadow mb-6">
+            <div key={cycle.id} className="p-4 border rounded shadow bg-white max-w-full">
               <h3 className="text-xl font-semibold mb-2">{cycle.name}</h3>
               <div className="space-y-2 mb-4">
                 <p>Status: <span className="font-medium">{cycle.status}</span></p>
@@ -89,9 +89,9 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
                 <p>Efficiency: <span className="font-medium">{summary.efficiency.toFixed(2)}</span></p>
               </div>
               {buys.length > 0 && (
-                <div className="mb-2">
+                <div className="mb-2 p-2 bg-gray-50 border border-gray-200 rounded overflow-x-auto">
                   <h4 className="font-semibold mb-1">Buy Transactions (Seeds Used)</h4>
-                  <table className="min-w-full bg-white border border-gray-200 rounded text-sm">
+                  <table className="min-w-full text-sm">
                     <thead>
                       <tr>
                         <th className="px-2 py-1 border">Item</th>
