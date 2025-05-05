@@ -23,8 +23,13 @@ function Tooltip({ text, children }: { text: string; children: React.ReactNode }
     >
       <span className="underline cursor-help">{children}</span>
       {show && (
-        <span className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 px-3 py-2 bg-gray-800 text-white text-xs rounded shadow-lg whitespace-pre-line min-w-[200px] max-w-xs">
-          {text}
+        <span className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 px-3 py-2 bg-gray-800 text-white text-xs rounded shadow-lg min-w-[200px] max-w-xs">
+          {text.split('\n').map((line, i) => (
+            <React.Fragment key={i}>
+              {i > 0 && <br />}
+              {line}
+            </React.Fragment>
+          ))}
         </span>
       )}
     </span>
@@ -104,31 +109,31 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
                 <p>Status: <span className="font-medium">{cycle.status}</span></p>
                 <p>Transactions: <span className="font-medium">{summary.count}</span></p>
                 <p>
-                  <Tooltip text="Total profit using the full value of all seeds bought for this cycle.\nFormula: (Total Earned from Sells) - (Total Spent on All Seeds Bought)">
+                  <Tooltip text={"Total profit using the full value of all seeds bought for this cycle.\nFormula: (Total Earned from Sells) - (Total Spent on All Seeds Bought)"}>
                     Profit (Total):
                   </Tooltip>
                   <span className={`font-medium ml-1 ${summary.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.totalProfit.toLocaleString()} gp</span>
                 </p>
                 <p>
-                  <Tooltip text="Profit using only the cost of seeds actually used (not all bought).\nFormula: (Total Earned from Sells) - (Cost of Seeds Used)">
+                  <Tooltip text={"Profit using only the cost of seeds actually used (not all bought).\nFormula: (Total Earned from Sells) - (Cost of Seeds Used)"}>
                     Profit (Used Seeds):
                   </Tooltip>
                   <span className={`font-medium ml-1 ${summary.profitUsedSeeds >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.profitUsedSeeds.toLocaleString()} gp</span>
                 </p>
                 <p>
-                  <Tooltip text="Sum of all items sold in this cycle.\nFormula: Sum of Quantities from Sell Transactions">
+                  <Tooltip text={"Sum of all items sold in this cycle.\nFormula: Sum of Quantities from Sell Transactions"}>
                     Yield:
                   </Tooltip>
                   <span className="font-medium ml-1">{summary.totalYield}</span>
                 </p>
                 <p>
-                  <Tooltip text="Sum of 'Seeds Used' values you set for each buy transaction.\nFormula: Sum of Seeds Used (per Buy Transaction)">
+                  <Tooltip text={"Sum of 'Seeds Used' values you set for each buy transaction.\nFormula: Sum of Seeds Used (per Buy Transaction)"}>
                     Seeds Used:
                   </Tooltip>
                   <span className="font-medium ml-1">{summary.seedsUsed}</span>
                 </p>
                 <p>
-                  <Tooltip text="Yield divided by Seeds Used.\nFormula: Yield / Seeds Used">
+                  <Tooltip text={"Yield divided by Seeds Used.\nFormula: Yield / Seeds Used"}>
                     Efficiency:
                   </Tooltip>
                   <span className="font-medium ml-1">{summary.efficiency.toFixed(2)}</span>
