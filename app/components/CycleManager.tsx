@@ -89,39 +89,30 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
                 <p>Efficiency: <span className="font-medium">{summary.efficiency.toFixed(2)}</span></p>
               </div>
               {buys.length > 0 && (
-                <div className="mb-2 p-2 bg-gray-50 border border-gray-200 rounded sm:overflow-x-auto">
-                  <h4 className="font-semibold mb-1">Buy Transactions (Seeds Used)</h4>
-                  <table className="w-full table-fixed text-sm">
-                    <thead>
-                      <tr>
-                        <th className="px-2 py-1 border">Item</th>
-                        <th className="px-2 py-1 border">Qty Bought</th>
-                        <th className="px-2 py-1 border">Price/Ea</th>
-                        <th className="px-2 py-1 border">Price Total</th>
-                        <th className="px-2 py-1 border">Seeds Used</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {buys.map((tx) => (
-                        <tr key={tx.time}>
-                          <td className="px-2 py-1 border">{tx.itemId}</td>
-                          <td className="px-2 py-1 border">{tx.quantity}</td>
-                          <td className="px-2 py-1 border">{tx.price.toLocaleString()}</td>
-                          <td className="px-2 py-1 border">{(tx.price * tx.quantity).toLocaleString()}</td>
-                          <td className="px-2 py-1 border">
+                <div className="mb-2 p-2 bg-gray-50 border border-gray-200 rounded">
+                  <h4 className="font-semibold mb-2">Buy Transactions (Seeds Used)</h4>
+                  <div className="space-y-2">
+                    {buys.map((tx) => (
+                      <div key={tx.time} className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 p-2 border rounded bg-white">
+                        <div className="flex-1 grid grid-cols-2 sm:grid-cols-5 gap-2 items-center">
+                          <div><span className="font-semibold">Item:</span> {tx.itemId}</div>
+                          <div><span className="font-semibold">Qty:</span> {tx.quantity}</div>
+                          <div><span className="font-semibold">Price/Ea:</span> {tx.price.toLocaleString()}</div>
+                          <div><span className="font-semibold">Price Total:</span> {(tx.price * tx.quantity).toLocaleString()}</div>
+                          <div className="flex items-center"><span className="font-semibold mr-1">Seeds Used:</span>
                             <input
                               type="number"
                               min={0}
                               max={tx.quantity}
                               value={typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity}
                               onChange={e => onSeedsUsedChange(tx.time, Math.max(0, Math.min(tx.quantity, Number(e.target.value))))}
-                              className="w-16 max-w-xs border rounded p-1 text-right"
+                              className="w-16 max-w-xs border rounded p-1 text-right ml-1"
                             />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
