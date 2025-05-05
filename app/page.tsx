@@ -106,7 +106,8 @@ export default function Home() {
                   <th className="px-4 py-2 border">Buy/Sell</th>
                   <th className="px-4 py-2 border">Item Name</th>
                   <th className="px-4 py-2 border">Quantity</th>
-                  <th className="px-4 py-2 border">Price</th>
+                  <th className="px-4 py-2 border">Price/Ea</th>
+                  <th className="px-4 py-2 border">Price Total</th>
                   <th className="px-4 py-2 border">Time</th>
                   <th className="px-4 py-2 border">Cycle</th>
                 </tr>
@@ -118,6 +119,7 @@ export default function Home() {
                     <td className="px-4 py-2 border">{itemMap[tx.itemId] || tx.itemId}</td>
                     <td className="px-4 py-2 border">{tx.quantity}</td>
                     <td className="px-4 py-2 border">{tx.price.toLocaleString()}</td>
+                    <td className="px-4 py-2 border">{(tx.price * tx.quantity).toLocaleString()}</td>
                     <td className="px-4 py-2 border">{new Date(tx.time).toLocaleString()}</td>
                     <td className="px-4 py-2 border">
                       <select
