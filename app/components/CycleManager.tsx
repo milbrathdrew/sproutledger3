@@ -84,42 +84,22 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
                 <p>Transactions: <span className="font-medium">{summary.count}</span></p>
                 <p>
                   Profit (Total):
-                  <span
-                    className="ml-1 cursor-help"
-                    title="Total profit using the full value of all seeds bought for this cycle."
-                  >ℹ️</span>
                   <span className={`font-medium ml-1 ${summary.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.totalProfit.toLocaleString()} gp</span>
                 </p>
                 <p>
                   Profit (Used Seeds):
-                  <span
-                    className="ml-1 cursor-help"
-                    title="Profit using only the cost of seeds actually used (not all bought)."
-                  >ℹ️</span>
                   <span className={`font-medium ml-1 ${summary.profitUsedSeeds >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.profitUsedSeeds.toLocaleString()} gp</span>
                 </p>
                 <p>
                   Yield:
-                  <span
-                    className="ml-1 cursor-help"
-                    title="Sum of all items sold in this cycle."
-                  >ℹ️</span>
                   <span className="font-medium ml-1">{summary.totalYield}</span>
                 </p>
                 <p>
                   Seeds Used:
-                  <span
-                    className="ml-1 cursor-help"
-                    title="Sum of 'Seeds Used' values you set for each buy transaction."
-                  >ℹ️</span>
                   <span className="font-medium ml-1">{summary.seedsUsed}</span>
                 </p>
                 <p>
                   Efficiency:
-                  <span
-                    className="ml-1 cursor-help"
-                    title="Yield divided by Seeds Used."
-                  >ℹ️</span>
                   <span className="font-medium ml-1">{summary.efficiency.toFixed(2)}</span>
                 </p>
               </div>
