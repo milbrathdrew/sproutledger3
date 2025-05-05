@@ -93,22 +93,33 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
                   <h4 className="font-semibold mb-2">Buy Transactions (Seeds Used)</h4>
                   <div className="space-y-2">
                     {buys.map((tx) => (
-                      <div key={tx.time} className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 p-2 border rounded bg-white">
-                        <div className="flex-1 grid grid-cols-2 sm:grid-cols-5 gap-2 items-center">
-                          <div><span className="font-semibold">Item:</span> {tx.itemId}</div>
-                          <div><span className="font-semibold">Qty:</span> {tx.quantity}</div>
-                          <div><span className="font-semibold">Price/Ea:</span> {tx.price.toLocaleString()}</div>
-                          <div><span className="font-semibold">Price Total:</span> {(tx.price * tx.quantity).toLocaleString()}</div>
-                          <div className="flex items-center"><span className="font-semibold mr-1">Seeds Used:</span>
-                            <input
-                              type="number"
-                              min={0}
-                              max={tx.quantity}
-                              value={typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity}
-                              onChange={e => onSeedsUsedChange(tx.time, Math.max(0, Math.min(tx.quantity, Number(e.target.value))))}
-                              className="w-16 max-w-xs border rounded p-1 text-right ml-1"
-                            />
-                          </div>
+                      <div key={tx.time} className="p-3 border rounded bg-white flex flex-col space-y-1">
+                        <div className="flex justify-between items-center">
+                          <span className="font-semibold">Item:</span>
+                          <span>{tx.itemId}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="font-semibold">Qty:</span>
+                          <span>{tx.quantity}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="font-semibold">Price/Ea:</span>
+                          <span>{tx.price.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="font-semibold">Price Total:</span>
+                          <span>{(tx.price * tx.quantity).toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="font-semibold">Seeds Used:</span>
+                          <input
+                            type="number"
+                            min={0}
+                            max={tx.quantity}
+                            value={typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity}
+                            onChange={e => onSeedsUsedChange(tx.time, Math.max(0, Math.min(tx.quantity, Number(e.target.value))))}
+                            className="w-20 border rounded p-1 text-right ml-2"
+                          />
                         </div>
                       </div>
                     ))}
