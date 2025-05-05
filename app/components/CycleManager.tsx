@@ -38,7 +38,6 @@ function Tooltip({ text, children }: { text: string; children: React.ReactNode }
 }
 
 export default function CycleManager({ cycles, transactions, onCycleCreate, onSeedsUsedChange, onCycleDelete }: CycleManagerProps) {
-  const [newCycleName, setNewCycleName] = React.useState("");
   const [editingCycleId, setEditingCycleId] = React.useState<string | null>(null);
 
   // Helper to generate a unique F-123 name
@@ -64,13 +63,6 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
     };
     onCycleCreate(newCycle);
     setEditingCycleId(newCycle.id); // Immediately allow renaming
-  };
-
-  const handleCycleNameChange = (cycleId: string, newName: string) => {
-    // This will be handled in the parent if you want to persist the rename
-    // For now, just update the local cycles state if needed
-    setEditingCycleId(null);
-    // You may want to add a callback to update the name in the parent cycles state
   };
 
   const calculateCycleSummary = (cycleId: string) => {
@@ -131,7 +123,7 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
                 <input
                   type="text"
                   value={cycle.name}
-                  onChange={e => handleCycleNameChange(cycle.id, e.target.value)}
+                  // onChange handler to be implemented if renaming is needed
                   onBlur={() => setEditingCycleId(null)}
                   className="text-xl font-semibold mb-2 border-b border-gray-300 focus:outline-none focus:border-blue-500 bg-transparent"
                   autoFocus

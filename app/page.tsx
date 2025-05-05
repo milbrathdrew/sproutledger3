@@ -111,7 +111,7 @@ export default function Home() {
               <div><strong>2. Assign Transactions:</strong> Use the dropdown in the transactions table to assign your buys and sells to a cycle.</div>
               <div><strong>3. Set Seeds Used:</strong> For each buy in a cycle, set how many seeds you actually used. This powers accurate profit and efficiency calculations.</div>
               <div><strong>4. Review Your Results:</strong> See profit, yield, and efficiency for each cycle. Delete cycles you no longer need with the × button.</div>
-              <div className="text-gray-500">You can hide these instructions at any time, but they'll stay visible until you create your first cycle.</div>
+              <div className="text-gray-500">You can hide these instructions at any time, but they&apos;ll stay visible until you create your first cycle.</div>
             </div>
           )}
         </div>
