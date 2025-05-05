@@ -89,7 +89,7 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
                 <p>Efficiency: <span className="font-medium">{summary.efficiency.toFixed(2)}</span></p>
               </div>
               {buys.length > 0 && (
-                <div className="mb-2 p-2 bg-gray-50 border border-gray-200 rounded">
+                <div className="mb-2 p-2 bg-gray-50 border border-gray-200 rounded sm:overflow-x-auto">
                   <h4 className="font-semibold mb-1">Buy Transactions (Seeds Used)</h4>
                   <table className="w-full table-fixed text-sm">
                     <thead>
