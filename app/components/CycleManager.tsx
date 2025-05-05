@@ -112,14 +112,52 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="font-semibold">Seeds Used:</span>
-                          <input
-                            type="number"
-                            min={0}
-                            max={tx.quantity}
-                            value={typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity}
-                            onChange={e => onSeedsUsedChange(tx.time, Math.max(0, Math.min(tx.quantity, Number(e.target.value))))}
-                            className="w-20 border rounded p-1 text-right ml-2"
-                          />
+                          <div className="flex flex-col items-end">
+                            <div className="flex items-center space-x-1">
+                              <button
+                                type="button"
+                                className="px-2 py-1 border rounded bg-gray-100 hover:bg-gray-200"
+                                onClick={() => onSeedsUsedChange(tx.time, Math.max(0, (typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity) - 1))}
+                                disabled={(typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity) <= 0}
+                              >-</button>
+                              <input
+                                type="number"
+                                min={0}
+                                max={tx.quantity}
+                                value={typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity}
+                                onChange={e => onSeedsUsedChange(tx.time, Math.max(0, Math.min(tx.quantity, Number(e.target.value))))}
+                                className="w-20 border rounded p-1 text-right mx-1"
+                              />
+                              <button
+                                type="button"
+                                className="px-2 py-1 border rounded bg-gray-100 hover:bg-gray-200"
+                                onClick={() => onSeedsUsedChange(tx.time, Math.min(tx.quantity, (typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity) + 1))}
+                                disabled={(typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity) >= tx.quantity}
+                              >+</button>
+                            </div>
+                            <div className="flex space-x-1 mt-1">
+                              {[1, 5, 10].map(val => (
+                                <button
+                                  key={val}
+                                  type="button"
+                                  className="px-2 py-1 border rounded bg-blue-100 hover:bg-blue-200"
+                                  onClick={() => onSeedsUsedChange(tx.time, Math.min(tx.quantity, (typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity) + val))}
+                                  disabled={(typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity) + val > tx.quantity}
+                                >{val}</button>
+                              ))}
+                              <button
+                                type="button"
+                                className="px-2 py-1 border rounded bg-blue-100 hover:bg-blue-200"
+                                onClick={() => {
+                                  const custom = window.prompt('Enter custom amount:');
+                                  const num = Number(custom);
+                                  if (!isNaN(num) && num >= 0 && num <= tx.quantity) {
+                                    onSeedsUsedChange(tx.time, num);
+                                  }
+                                }}
+                              >X</button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     ))}
