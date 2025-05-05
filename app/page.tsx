@@ -34,7 +34,7 @@ export default function Home() {
       let data;
       try {
         data = JSON.parse(text);
-      } catch (err) {
+      } catch {
         setError("Invalid JSON file.");
         return;
       }
@@ -51,7 +51,7 @@ export default function Home() {
       
       const sorted = [...data].sort((a, b) => b.time - a.time);
       setTransactions(sorted as Transaction[]);
-    } catch (err) {
+    } catch {
       setError("Failed to read file.");
     }
   };
