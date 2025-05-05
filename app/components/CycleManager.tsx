@@ -7,9 +7,10 @@ interface CycleManagerProps {
   cycles: Cycle[];
   transactions: Transaction[];
   onCycleCreate: (cycle: Cycle) => void;
+  onSeedsUsedChange: (transactionId: number, seedsUsed: number) => void;
 }
 
-export default function CycleManager({ cycles, transactions, onCycleCreate }: CycleManagerProps) {
+export default function CycleManager({ cycles, transactions, onCycleCreate, onSeedsUsedChange }: CycleManagerProps) {
   const [newCycleName, setNewCycleName] = React.useState('');
 
   const handleCreateCycle = () => {
@@ -31,12 +32,14 @@ export default function CycleManager({ cycles, transactions, onCycleCreate }: Cy
     const sells = cycleTxs.filter(t => !t.buy);
     const totalSpent = buys.reduce((sum, t) => sum + (t.price * t.quantity), 0);
     const totalEarned = sells.reduce((sum, t) => sum + (t.price * t.quantity), 0);
-    const seedsUsed = buys.reduce((sum, t) => sum + t.quantity, 0);
+    const seedsUsed = buys.reduce((sum, t) => sum + (typeof t.seedsUsed === 'number' ? t.seedsUsed : t.quantity), 0);
     const totalYield = sells.reduce((sum, t) => sum + t.quantity, 0);
+    const efficiency = seedsUsed > 0 ? (totalYield / seedsUsed) : 0;
     return {
       totalProfit: totalEarned - totalSpent,
       totalYield,
       seedsUsed,
+      efficiency,
       count: cycleTxs.length,
     };
   };
@@ -64,16 +67,50 @@ export default function CycleManager({ cycles, transactions, onCycleCreate }: Cy
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {cycles.map((cycle) => {
           const summary = calculateCycleSummary(cycle.id);
+          const buys = transactions.filter(t => t.cycleId === cycle.id && t.buy);
           return (
-            <div key={cycle.id} className="p-4 border rounded shadow">
+            <div key={cycle.id} className="p-4 border rounded shadow mb-6">
               <h3 className="text-xl font-semibold mb-2">{cycle.name}</h3>
-              <div className="space-y-2">
+              <div className="space-y-2 mb-4">
                 <p>Status: <span className="font-medium">{cycle.status}</span></p>
                 <p>Transactions: <span className="font-medium">{summary.count}</span></p>
                 <p>Profit: <span className={`font-medium ${summary.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.totalProfit.toLocaleString()} gp</span></p>
                 <p>Yield: <span className="font-medium">{summary.totalYield}</span></p>
                 <p>Seeds Used: <span className="font-medium">{summary.seedsUsed}</span></p>
+                <p>Efficiency: <span className="font-medium">{summary.efficiency.toFixed(2)}</span></p>
               </div>
+              {buys.length > 0 && (
+                <div className="mb-2">
+                  <h4 className="font-semibold mb-1">Buy Transactions (Seeds Used)</h4>
+                  <table className="min-w-full bg-white border border-gray-200 rounded text-sm">
+                    <thead>
+                      <tr>
+                        <th className="px-2 py-1 border">Item</th>
+                        <th className="px-2 py-1 border">Qty Bought</th>
+                        <th className="px-2 py-1 border">Seeds Used</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {buys.map((tx) => (
+                        <tr key={tx.time}>
+                          <td className="px-2 py-1 border">{tx.itemId}</td>
+                          <td className="px-2 py-1 border">{tx.quantity}</td>
+                          <td className="px-2 py-1 border">
+                            <input
+                              type="number"
+                              min={0}
+                              max={tx.quantity}
+                              value={typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity}
+                              onChange={e => onSeedsUsedChange(tx.time, Math.max(0, Math.min(tx.quantity, Number(e.target.value))))}
+                              className="w-16 border rounded p-1 text-right"
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           );
         })}

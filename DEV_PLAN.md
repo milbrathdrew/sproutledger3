@@ -16,11 +16,12 @@
    - Users can create new farming cycles.
    - Assign transactions to cycles (no splitting buys for now).
    - Display cycles as cards with summary stats (profit, yield, seeds used, etc.).
+   - **NEW:** For each buy transaction assigned to a cycle, users can specify how many seeds from that transaction were actually used in the cycle (defaulting to the full quantity, but editable). Calculations for profit, yield, and efficiency (yield/seeds used) are based on the sum of these per-transaction values. (Branch: feature/user-defined-seeds-used)
 4. **Transaction Management**
    - List all transactions (sortable, filterable, assignable to cycles).
    - Show unassigned transactions.
 5. **Profit/Yield Calculation**
-   - Calculate and display profit/loss and average yield per cycle and overall.
+   - Calculate and display profit/loss and average yield per cycle and overall, using the sum of user-defined seeds used per buy transaction in each cycle.
 6. **Dashboard**
    - Show summary cards (total profit, active cycles, avg. yield, recent transactions).
    - Show recent transactions and profit trends (basic chart, optional for MVP).

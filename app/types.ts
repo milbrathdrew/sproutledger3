@@ -5,6 +5,7 @@ export interface Transaction {
   price: number;
   time: number;
   cycleId?: string; // Optional reference to which cycle this transaction belongs to
+  seedsUsed?: number; // User-defined seeds used for this transaction (if buy)
 }
 
 export interface ItemMapping {

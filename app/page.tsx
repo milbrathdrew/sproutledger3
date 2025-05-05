@@ -59,9 +59,17 @@ export default function Home() {
     setCycles([...cycles, cycle]);
   };
 
+  const handleSeedsUsedChange = (transactionId: number, seedsUsed: number) => {
+    setTransactions(transactions.map(tx =>
+      tx.time === transactionId ? { ...tx, seedsUsed } : tx
+    ));
+  };
+
   const handleTransactionAssign = (transactionId: number, cycleId: string) => {
-    setTransactions(transactions.map(tx => 
-      tx.time === transactionId ? { ...tx, cycleId } : tx
+    setTransactions(transactions.map(tx =>
+      tx.time === transactionId
+        ? { ...tx, cycleId, seedsUsed: typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity }
+        : tx
     ));
   };
 
@@ -84,6 +92,7 @@ export default function Home() {
           cycles={cycles}
           transactions={transactions}
           onCycleCreate={handleCycleCreate}
+          onSeedsUsedChange={handleSeedsUsedChange}
         />
       )}
 
