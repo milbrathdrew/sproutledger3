@@ -35,8 +35,16 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
     const seedsUsed = buys.reduce((sum, t) => sum + (typeof t.seedsUsed === 'number' ? t.seedsUsed : t.quantity), 0);
     const totalYield = sells.reduce((sum, t) => sum + t.quantity, 0);
     const efficiency = seedsUsed > 0 ? (totalYield / seedsUsed) : 0;
+    // Calculate cost of only seeds used
+    const spentOnSeedsUsed = buys.reduce((sum, t) => {
+      const used = typeof t.seedsUsed === 'number' ? t.seedsUsed : t.quantity;
+      const perSeed = t.quantity > 0 ? t.price : 0;
+      return sum + (perSeed * used);
+    }, 0);
+    const profitUsedSeeds = totalEarned - spentOnSeedsUsed;
     return {
       totalProfit: totalEarned - totalSpent,
+      profitUsedSeeds,
       totalYield,
       seedsUsed,
       efficiency,
@@ -74,7 +82,8 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
               <div className="space-y-2 mb-4">
                 <p>Status: <span className="font-medium">{cycle.status}</span></p>
                 <p>Transactions: <span className="font-medium">{summary.count}</span></p>
-                <p>Profit: <span className={`font-medium ${summary.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.totalProfit.toLocaleString()} gp</span></p>
+                <p>Profit (Total): <span className={`font-medium ${summary.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.totalProfit.toLocaleString()} gp</span></p>
+                <p>Profit (Used Seeds): <span className={`font-medium ${summary.profitUsedSeeds >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.profitUsedSeeds.toLocaleString()} gp</span></p>
                 <p>Yield: <span className="font-medium">{summary.totalYield}</span></p>
                 <p>Seeds Used: <span className="font-medium">{summary.seedsUsed}</span></p>
                 <p>Efficiency: <span className="font-medium">{summary.efficiency.toFixed(2)}</span></p>
@@ -87,6 +96,8 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
                       <tr>
                         <th className="px-2 py-1 border">Item</th>
                         <th className="px-2 py-1 border">Qty Bought</th>
+                        <th className="px-2 py-1 border">Price/Ea</th>
+                        <th className="px-2 py-1 border">Price Total</th>
                         <th className="px-2 py-1 border">Seeds Used</th>
                       </tr>
                     </thead>
@@ -95,6 +106,8 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
                         <tr key={tx.time}>
                           <td className="px-2 py-1 border">{tx.itemId}</td>
                           <td className="px-2 py-1 border">{tx.quantity}</td>
+                          <td className="px-2 py-1 border">{tx.price.toLocaleString()}</td>
+                          <td className="px-2 py-1 border">{(tx.price * tx.quantity).toLocaleString()}</td>
                           <td className="px-2 py-1 border">
                             <input
                               type="number"
