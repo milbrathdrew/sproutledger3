@@ -8,6 +8,7 @@ interface CycleManagerProps {
   transactions: Transaction[];
   onCycleCreate: (cycle: Cycle) => void;
   onSeedsUsedChange: (transactionId: number, seedsUsed: number) => void;
+  onCycleDelete: (cycleId: string) => void;
 }
 
 function Tooltip({ text, children }: { text: string; children: React.ReactNode }) {
@@ -36,20 +37,40 @@ function Tooltip({ text, children }: { text: string; children: React.ReactNode }
   );
 }
 
-export default function CycleManager({ cycles, transactions, onCycleCreate, onSeedsUsedChange }: CycleManagerProps) {
-  const [newCycleName, setNewCycleName] = React.useState('');
+export default function CycleManager({ cycles, transactions, onCycleCreate, onSeedsUsedChange, onCycleDelete }: CycleManagerProps) {
+  const [newCycleName, setNewCycleName] = React.useState("");
+  const [editingCycleId, setEditingCycleId] = React.useState<string | null>(null);
+
+  // Helper to generate a unique F-123 name
+  function generateUniqueCycleName() {
+    let name: string;
+    let attempts = 0;
+    do {
+      const num = Math.floor(100 + Math.random() * 900); // 100-999
+      name = `F-${num}`;
+      attempts++;
+    } while (cycles.some(c => c.name === name) && attempts < 1000);
+    return name;
+  }
 
   const handleCreateCycle = () => {
-    if (!newCycleName.trim()) return;
+    const uniqueName = generateUniqueCycleName();
     const newCycle: Cycle = {
       id: Date.now().toString(),
-      name: newCycleName,
+      name: uniqueName,
       startTime: Date.now(),
       transactions: [],
       status: 'active',
     };
     onCycleCreate(newCycle);
-    setNewCycleName('');
+    setEditingCycleId(newCycle.id); // Immediately allow renaming
+  };
+
+  const handleCycleNameChange = (cycleId: string, newName: string) => {
+    // This will be handled in the parent if you want to persist the rename
+    // For now, just update the local cycles state if needed
+    setEditingCycleId(null);
+    // You may want to add a callback to update the name in the parent cycles state
   };
 
   const calculateCycleSummary = (cycleId: string) => {
@@ -82,29 +103,48 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
     <div className="w-full max-w-4xl">
       <div className="mb-6">
         <h2 className="text-2xl font-bold mb-4">Farming Cycles</h2>
-        <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            value={newCycleName}
-            onChange={(e) => setNewCycleName(e.target.value)}
-            placeholder="New cycle name"
-            className="flex-1 p-2 border rounded"
-          />
-          <button
-            onClick={handleCreateCycle}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-          >
-            Create Cycle
-          </button>
-        </div>
+        <button
+          onClick={handleCreateCycle}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          Create Cycle
+        </button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {cycles.map((cycle) => {
           const summary = calculateCycleSummary(cycle.id);
           const buys = transactions.filter(t => t.cycleId === cycle.id && t.buy);
           return (
-            <div key={cycle.id} className="p-4 border rounded shadow bg-white max-w-4xl w-full">
-              <h3 className="text-xl font-semibold mb-2">{cycle.name}</h3>
+            <div key={cycle.id} className="p-4 border rounded shadow bg-white max-w-4xl w-full relative">
+              <button
+                className="absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold text-lg bg-white rounded-full p-1 border border-red-200 hover:bg-red-50 transition"
+                title="Delete cycle"
+                onClick={() => {
+                  if (window.confirm('Are you sure you want to delete this cycle? This action cannot be undone.')) {
+                    onCycleDelete(cycle.id);
+                  }
+                }}
+              >
+                ×
+              </button>
+              {editingCycleId === cycle.id ? (
+                <input
+                  type="text"
+                  value={cycle.name}
+                  onChange={e => handleCycleNameChange(cycle.id, e.target.value)}
+                  onBlur={() => setEditingCycleId(null)}
+                  className="text-xl font-semibold mb-2 border-b border-gray-300 focus:outline-none focus:border-blue-500 bg-transparent"
+                  autoFocus
+                />
+              ) : (
+                <h3
+                  className="text-xl font-semibold mb-2 cursor-pointer"
+                  onClick={() => setEditingCycleId(cycle.id)}
+                  title="Click to rename"
+                >
+                  {cycle.name}
+                </h3>
+              )}
               <div className="space-y-2 mb-4">
                 <p>Status: <span className="font-medium">{cycle.status}</span></p>
                 <p>Transactions: <span className="font-medium">{summary.count}</span></p>

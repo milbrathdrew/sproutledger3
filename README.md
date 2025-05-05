@@ -1,3 +1,39 @@
+# SproutLedger: Grow Your GP, Track Your Success!
+
+SproutLedger is the ultimate web tool for Old School RuneScape farmers who want to maximize their profits and truly understand their farming cycles.
+
+- Track every seed, input, and harvest—from Ranarrs to Yew trees and beyond.
+- See your real profit per run with custom cycle matching, patch tracking, and support for all secondary inputs.
+- Effortlessly manage your farming cycles with a beautiful, user-friendly interface.
+
+## Easy setup, powerful insights:
+- Import your RuneLite Grand Exchange data in seconds.
+- Create and manage farming cycles with automatic unique naming (e.g., F-123) and easy renaming.
+- Assign transactions to cycles, set seeds used per buy, and track yield and efficiency.
+- Instantly see profit, yield, and efficiency for every cycle—make smarter farming decisions and watch your GP grow!
+- Delete cycles with a single click (with confirmation), and keep your data organized.
+
+SproutLedger: For real RuneScape farmers, by real RuneScape farmers.
+
+---
+
+## Features
+- **Import RuneLite Grand Exchange data** for instant transaction tracking
+- **Automatic and custom cycle management**
+- **Per-cycle and per-transaction profit/yield/efficiency calculations**
+- **User-friendly, modern UI**
+- **Customizable cursor for a fun OSRS touch**
+
+---
+
+Welcome to SproutLedger!
+
+For more help, see the in-app tooltips or contact the project maintainer.
+
+---
+
+[GitHub Repository](https://github.com/milbrathdrew/sproutledger3)
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

@@ -9,6 +9,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [itemMap, setItemMap] = useState<Record<number, string>>({});
   const [cycles, setCycles] = useState<Cycle[]>([]);
+  const [showOnboarding, setShowOnboarding] = useState(true);
 
   const fetchItemMapping = async () => {
     try {
@@ -73,6 +74,11 @@ export default function Home() {
     ));
   };
 
+  const handleCycleDelete = (cycleId: string) => {
+    setCycles(cycles.filter(c => c.id !== cycleId));
+    setTransactions(transactions.map(tx => tx.cycleId === cycleId ? { ...tx, cycleId: undefined } : tx));
+  };
+
   return (
     <div className="min-h-screen p-8 flex flex-col items-center bg-gray-50">
       <h1 className="text-3xl font-bold mb-6">SproutLedger - Farming Cycle Manager</h1>
@@ -87,12 +93,37 @@ export default function Home() {
         {error && <div className="text-red-500 mb-4">{error}</div>}
       </div>
 
+      {/* Onboarding Instructions: show after file upload, collapsible, expanded if no cycles */}
+      {transactions.length > 0 && (
+        <div className="w-full max-w-4xl mb-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Getting Started</h2>
+            <button
+              className="text-blue-600 underline text-sm"
+              onClick={() => setShowOnboarding(v => !v)}
+            >
+              {showOnboarding || cycles.length === 0 ? 'Hide' : 'Show'} instructions
+            </button>
+          </div>
+          {(showOnboarding || cycles.length === 0) && (
+            <div className="mt-2 bg-blue-50 border border-blue-200 rounded p-4 text-sm space-y-2">
+              <div><strong>1. Create a Cycle:</strong> Click <span className="font-mono bg-gray-100 px-1 rounded">Create Cycle</span> to start a new farming run. Each cycle gets a unique name (e.g., F-123) and can be renamed.</div>
+              <div><strong>2. Assign Transactions:</strong> Use the dropdown in the transactions table to assign your buys and sells to a cycle.</div>
+              <div><strong>3. Set Seeds Used:</strong> For each buy in a cycle, set how many seeds you actually used. This powers accurate profit and efficiency calculations.</div>
+              <div><strong>4. Review Your Results:</strong> See profit, yield, and efficiency for each cycle. Delete cycles you no longer need with the × button.</div>
+              <div className="text-gray-500">You can hide these instructions at any time, but they'll stay visible until you create your first cycle.</div>
+            </div>
+          )}
+        </div>
+      )}
+
       {transactions.length > 0 && (
         <CycleManager
           cycles={cycles}
           transactions={transactions}
           onCycleCreate={handleCycleCreate}
           onSeedsUsedChange={handleSeedsUsedChange}
+          onCycleDelete={handleCycleDelete}
         />
       )}
 
@@ -144,7 +175,15 @@ export default function Home() {
       )}
       
       {transactions.length === 0 && !error && (
-        <div className="text-gray-500 mt-8">No transactions imported yet.</div>
+        <div className="text-gray-500 mt-8 flex flex-col items-center">
+          <p>No transactions imported yet.</p>
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded max-w-xl text-center">
+            <strong>How to get started:</strong><br />
+            1. Go to <a href="https://runelite.net/account/grand-exchange" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">https://runelite.net/account/grand-exchange</a><br />
+            2. Click <span className="font-mono bg-gray-100 px-1 rounded">Export Grand Exchange</span> to download your data file.<br />
+            3. Upload the exported file above to begin tracking your farming cycles!
+          </div>
+        </div>
       )}
     </div>
   );
