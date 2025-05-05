@@ -10,6 +10,27 @@ interface CycleManagerProps {
   onSeedsUsedChange: (transactionId: number, seedsUsed: number) => void;
 }
 
+function Tooltip({ text, children }: { text: string; children: React.ReactNode }) {
+  const [show, setShow] = React.useState(false);
+  return (
+    <span className="relative"
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+      onFocus={() => setShow(true)}
+      onBlur={() => setShow(false)}
+      tabIndex={0}
+      style={{ outline: 'none' }}
+    >
+      <span className="underline cursor-help">{children}</span>
+      {show && (
+        <span className="absolute z-10 left-1/2 -translate-x-1/2 mt-2 px-3 py-2 bg-gray-800 text-white text-xs rounded shadow-lg whitespace-pre-line min-w-[200px] max-w-xs">
+          {text}
+        </span>
+      )}
+    </span>
+  );
+}
+
 export default function CycleManager({ cycles, transactions, onCycleCreate, onSeedsUsedChange }: CycleManagerProps) {
   const [newCycleName, setNewCycleName] = React.useState('');
 
@@ -83,43 +104,33 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
                 <p>Status: <span className="font-medium">{cycle.status}</span></p>
                 <p>Transactions: <span className="font-medium">{summary.count}</span></p>
                 <p>
-                  Profit (Total):
-                  <span
-                    className="ml-1 cursor-help"
-                    title="Total profit using the full value of all seeds bought for this cycle. Formula: (Total Earned from Sells) - (Total Spent on All Seeds Bought)"
-                  >ℹ️</span>
+                  <Tooltip text="Total profit using the full value of all seeds bought for this cycle.\nFormula: (Total Earned from Sells) - (Total Spent on All Seeds Bought)">
+                    Profit (Total):
+                  </Tooltip>
                   <span className={`font-medium ml-1 ${summary.totalProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.totalProfit.toLocaleString()} gp</span>
                 </p>
                 <p>
-                  Profit (Used Seeds):
-                  <span
-                    className="ml-1 cursor-help"
-                    title="Profit using only the cost of seeds actually used (not all bought). Formula: (Total Earned from Sells) - (Cost of Seeds Used)"
-                  >ℹ️</span>
+                  <Tooltip text="Profit using only the cost of seeds actually used (not all bought).\nFormula: (Total Earned from Sells) - (Cost of Seeds Used)">
+                    Profit (Used Seeds):
+                  </Tooltip>
                   <span className={`font-medium ml-1 ${summary.profitUsedSeeds >= 0 ? 'text-green-600' : 'text-red-600'}`}>{summary.profitUsedSeeds.toLocaleString()} gp</span>
                 </p>
                 <p>
-                  Yield:
-                  <span
-                    className="ml-1 cursor-help"
-                    title="Sum of all items sold in this cycle. Formula: Sum of Quantities from Sell Transactions"
-                  >ℹ️</span>
+                  <Tooltip text="Sum of all items sold in this cycle.\nFormula: Sum of Quantities from Sell Transactions">
+                    Yield:
+                  </Tooltip>
                   <span className="font-medium ml-1">{summary.totalYield}</span>
                 </p>
                 <p>
-                  Seeds Used:
-                  <span
-                    className="ml-1 cursor-help"
-                    title="Sum of 'Seeds Used' values you set for each buy transaction. Formula: Sum of Seeds Used (per Buy Transaction)"
-                  >ℹ️</span>
+                  <Tooltip text="Sum of 'Seeds Used' values you set for each buy transaction.\nFormula: Sum of Seeds Used (per Buy Transaction)">
+                    Seeds Used:
+                  </Tooltip>
                   <span className="font-medium ml-1">{summary.seedsUsed}</span>
                 </p>
                 <p>
-                  Efficiency:
-                  <span
-                    className="ml-1 cursor-help"
-                    title="Yield divided by Seeds Used. Formula: Yield / Seeds Used"
-                  >ℹ️</span>
+                  <Tooltip text="Yield divided by Seeds Used.\nFormula: Yield / Seeds Used">
+                    Efficiency:
+                  </Tooltip>
                   <span className="font-medium ml-1">{summary.efficiency.toFixed(2)}</span>
                 </p>
               </div>
