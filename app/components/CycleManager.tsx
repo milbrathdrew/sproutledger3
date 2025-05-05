@@ -89,9 +89,9 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
                 <p>Efficiency: <span className="font-medium">{summary.efficiency.toFixed(2)}</span></p>
               </div>
               {buys.length > 0 && (
-                <div className="mb-2 p-2 bg-gray-50 border border-gray-200 rounded">
+                <div className="mb-2 p-2 bg-gray-50 border border-gray-200 rounded overflow-x-auto">
                   <h4 className="font-semibold mb-1">Buy Transactions (Seeds Used)</h4>
-                  <table className="w-full text-sm">
+                  <table className="w-full table-fixed text-sm">
                     <thead>
                       <tr>
                         <th className="px-2 py-1 border">Item</th>
@@ -115,7 +115,7 @@ export default function CycleManager({ cycles, transactions, onCycleCreate, onSe
                               max={tx.quantity}
                               value={typeof tx.seedsUsed === 'number' ? tx.seedsUsed : tx.quantity}
                               onChange={e => onSeedsUsedChange(tx.time, Math.max(0, Math.min(tx.quantity, Number(e.target.value))))}
-                              className="w-16 border rounded p-1 text-right"
+                              className="w-16 max-w-xs border rounded p-1 text-right"
                             />
                           </td>
                         </tr>
